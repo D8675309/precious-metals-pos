@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precious Metals POS — The Complete Point-of-Sale for Gold Buyers &amp; Coin Dealers</title>
+  <meta name="description" content="The complete point-of-sale system for gold buyers, coin dealers, and precious metals shops. Live spot prices, instant calculations, compliance built in.">
+  <meta property="og:title" content="Precious Metals POS — Built for Gold Buyers">
+  <meta property="og:description" content="Live spot prices. Instant calculations. Compliance built in. Everything a precious metals dealer needs.">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts -->
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* ============================================
+       DESIGN TOKENS
+       ============================================ */
+    :root {
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+      --space-32: 8rem;
+
+      --color-bg:           #0a0a0a;
+      --color-surface:      #111111;
+      --color-surface-2:    #181818;
+      --color-surface-3:    #1e1e1e;
+      --color-border:       #2a2a2a;
+      --color-border-light: #333333;
+
+      --color-text:         #f0ede8;
+      --color-text-muted:   #9a9790;
+      --color-text-faint:   #5a5854;
+
+      --color-gold:         #D4A84B;
+      --color-gold-light:   #e6c475;
+      --color-gold-dark:    #b08a30;
+      --color-gold-glow:    rgba(212, 168, 75, 0.15);
+      --color-gold-glow-strong: rgba(212, 168, 75, 0.25);
+
+      --color-green:        #4ade80;
+      --color-red:          #6b4040;
+
+      --font-body:    'General Sans', 'Inter', sans-serif;
+      --font-display: 'General Sans', 'Inter', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.25rem;
+
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+      --shadow-gold: 0 0 40px rgba(212, 168, 75, 0.1);
+
+      --content-narrow: 640px;
+      --content-default: 960px;
+      --content-wide: 1200px;
+    }
+
+    /* ============================================
+       BASE RESET
+       ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      min-height: 100dvh;
+      line-height: 1.6;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+
+    img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+    input, button, textarea, select { font: inherit; color: inherit; }
+    h1, h2, h3, h4, h5, h6 { text-wrap: balance; line-height: 1.15; }
+    p, li, figcaption { text-wrap: pretty; max-width: 72ch; }
+
+    ::selection {
+      background: rgba(212, 168, 75, 0.25);
+      color: var(--color-text);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-gold);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    button { cursor: pointer; background: none; border: none; }
+
+    a {
+      color: var(--color-gold);
+      text-decoration: none;
+      transition: color var(--transition-interactive);
+    }
+    a:hover { color: var(--color-gold-light); }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .container {
+      width: 100%;
+      max-width: var(--content-wide);
+      margin: 0 auto;
+      padding-inline: var(--space-6);
+    }
+
+    .section {
+      padding-block: clamp(var(--space-16), 8vw, var(--space-24));
+    }
+
+    .section__header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto var(--space-12);
+    }
+
+    .section__label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-4);
+    }
+
+    .section__title {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-4);
+    }
+
+    .section__desc {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-inline: auto;
+    }
+
+    /* ============================================
+       HEADER / NAV
+       ============================================ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .header--scrolled {
+      border-bottom-color: var(--color-border);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.3);
+    }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .header__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .header__logo:hover { color: var(--color-text); }
+
+    .header__logo-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .header__nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .header__nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      list-style: none;
+    }
+
+    .header__nav-links a {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      transition: color var(--transition-interactive);
+    }
+    .header__nav-links a:hover { color: var(--color-text); }
+
+    .header__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-5);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: #0a0a0a;
+      background: var(--color-gold);
+      border-radius: var(--radius-lg);
+      transition: background var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .header__cta:hover {
+      background: var(--color-gold-light);
+      color: #0a0a0a;
+      transform: translateY(-1px);
+    }
+
+    .header__menu-btn {
+      display: none;
+      color: var(--color-text);
+      padding: var(--space-2);
+    }
+
+    @media (max-width: 768px) {
+      .header__nav-links { display: none; }
+      .header__cta { display: none; }
+      .header__menu-btn { display: flex; }
+
+      .header__nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.97);
+        backdrop-filter: blur(16px);
+        padding: var(--space-6);
+        gap: var(--space-4);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .header__nav-links.active a {
+        font-size: var(--text-base);
+        padding: var(--space-2) 0;
+      }
+
+      .mobile-cta {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-3) var(--space-5);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: #0a0a0a;
+        background: var(--color-gold);
+        border-radius: var(--radius-lg);
+        margin-top: var(--space-2);
+      }
+    }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      position: relative;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero__bg::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(212, 168, 75, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero__bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(212, 168, 75, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 168, 75, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent);
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent);
+      pointer-events: none;
+    }
+
+    .hero__layout {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero__content {
+      max-width: 600px;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-4);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--color-gold);
+      background: var(--color-gold-glow);
+      border: 1px solid rgba(212, 168, 75, 0.2);
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--space-6);
+      letter-spacing: 0.02em;
+    }
+    .hero__badge i { width: 14px; height: 14px; }
+
+    .hero__title {
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: var(--space-6);
+    }
+
+    .hero__title-gold {
+      color: var(--color-gold);
+    }
+
+    .hero__subtitle {
+      font-size: var(--text-lg);
+      color: var(--color-text-muted);
+      max-width: 520px;
+      line-height: 1.6;
+      margin-bottom: var(--space-8);
+    }
+
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-interactive);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      color: #0a0a0a;
+      background: var(--color-gold);
+      box-shadow: 0 0 20px rgba(212, 168, 75, 0.15);
+    }
+    .btn--primary:hover {
+      background: var(--color-gold-light);
+      color: #0a0a0a;
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px rgba(212, 168, 75, 0.25);
+    }
+
+    .btn--secondary {
+      color: var(--color-text);
+      background: transparent;
+      border: 1px solid var(--color-border-light);
+    }
+    .btn--secondary:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold);
+      transform: translateY(-1px);
+    }
+
+    .btn i { width: 16px; height: 16px; }
+
+    .hero__stats {
+      display: flex;
+      gap: var(--space-10);
+      margin-top: var(--space-12);
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .hero__stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-gold);
+      letter-spacing: -0.02em;
+    }
+
+    .hero__stat-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-1);
+    }
+
+    /* Hero screenshot mockup */
+    .hero__mockup {
+      position: relative;
+      perspective: 1200px;
+    }
+
+    .hero__mockup-frame {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.5),
+        0 0 80px rgba(212, 168, 75, 0.06);
+      transform: rotateY(-4deg) rotateX(2deg);
+      transition: transform 0.4s ease;
+    }
+
+    .hero__mockup-frame:hover {
+      transform: rotateY(-1deg) rotateX(1deg);
+    }
+
+    .hero__mockup-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: var(--color-surface-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .hero__mockup-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-border-light);
+    }
+    .hero__mockup-dot:nth-child(1) { background: #ff5f57; }
+    .hero__mockup-dot:nth-child(2) { background: #ffbd2e; }
+    .hero__mockup-dot:nth-child(3) { background: #28c840; }
+
+    .hero__mockup-bar-url {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: var(--color-text-faint);
+      font-family: var(--font-mono);
+    }
+
+    .hero__mockup-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 968px) {
+      .hero__layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+      }
+      .hero {
+        min-height: auto;
+        padding-top: var(--space-8);
+        padding-bottom: var(--space-8);
+      }
+      .hero__mockup-frame {
+        transform: none;
+      }
+      .hero__mockup-frame:hover {
+        transform: none;
+      }
+      .hero__stats {
+        gap: var(--space-6);
+        flex-wrap: wrap;
+      }
+    }
+
+    /* ============================================
+       SPOT PRICE TICKER
+       ============================================ */
+    .ticker {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-4) 0;
+      overflow: hidden;
+    }
+
+    .ticker__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+
+    .ticker__item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      white-space: nowrap;
+    }
+
+    .ticker__symbol {
+      font-weight: 600;
+      color: var(--color-text-faint);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .ticker__name {
+      color: var(--color-gold);
+      font-weight: 600;
+    }
+
+    .ticker__price {
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    .ticker__change {
+      font-size: var(--text-xs);
+      font-weight: 500;
+    }
+
+    .ticker__change--up { color: var(--color-green); }
+    .ticker__change--down { color: #ef4444; }
+
+    .ticker__sep {
+      color: var(--color-border-light);
+      font-size: var(--text-xs);
+      user-select: none;
+    }
+
+    .ticker__note {
+      display: block;
+      text-align: center;
+      font-size: 11px;
+      color: var(--color-text-faint);
+      margin-top: var(--space-2);
+    }
+
+    /* Hide duplicate ticker items on desktop */
+    .ticker__dup { display: none; }
+
+    @media (max-width: 768px) {
+      .ticker__dup { display: flex; }
+      span.ticker__dup { display: inline; }
+
+      .ticker__inner {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        animation: tickerScroll 20s linear infinite;
+        width: max-content;
+      }
+
+      @keyframes tickerScroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+    }
+
+    /* ============================================
+       FEATURES
+       ============================================ */
+    .features { background: var(--color-bg); }
+
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 1024px) {
+      .features__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .features__grid { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      padding: var(--space-6);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive);
+    }
+    .feature-card:hover {
+      border-color: rgba(212, 168, 75, 0.3);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .feature-card__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--color-gold-glow);
+      color: var(--color-gold);
+      margin-bottom: var(--space-4);
+    }
+    .feature-card__icon i { width: 22px; height: 22px; }
+
+    .feature-card__title {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+      letter-spacing: -0.01em;
+    }
+
+    .feature-card__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.55;
+    }
+
+    /* Feature screenshots */
+    .features__screenshot {
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-8);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(212, 168, 75, 0.15);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 60px rgba(212, 168, 75, 0.05);
+    }
+
+    .features__screenshot img {
+      width: 100%;
+      display: block;
+    }
+
+    .features__screenshot-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-4);
+    }
+
+    .features__screenshot-pair .features__screenshot {
+      margin: 0;
+    }
+
+    @media (max-width: 640px) {
+      .features__screenshot-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ============================================
+       COMPARISON TABLE
+       ============================================ */
+    .comparison {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .comparison__table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+    }
+
+    .comparison__table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      min-width: 600px;
+    }
+
+    .comparison__table thead th {
+      padding: var(--space-4) var(--space-5);
+      text-align: left;
+      font-weight: 600;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      background: var(--color-surface-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .comparison__table thead th:first-child {
+      min-width: 220px;
+    }
+
+    .comparison__table thead th.comparison__ours {
+      color: var(--color-gold);
+      background: rgba(212, 168, 75, 0.06);
+    }
+
+    .comparison__table tbody td {
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+    }
+
+    .comparison__table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison__table tbody td:nth-child(2) {
+      background: rgba(212, 168, 75, 0.03);
+    }
+
+    .comparison__table tbody tr:hover td {
+      background: var(--color-surface-3);
+    }
+    .comparison__table tbody tr:hover td:nth-child(2) {
+      background: rgba(212, 168, 75, 0.06);
+    }
+
+    .comparison__check {
+      color: var(--color-gold);
+      font-weight: 700;
+      font-size: 1.1em;
+    }
+
+    .comparison__x {
+      color: #5a4040;
+      font-weight: 500;
+    }
+
+    /* ============================================
+       HOW IT WORKS
+       ============================================ */
+    .how-it-works {
+      background: var(--color-bg);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 768px) {
+      .steps { grid-template-columns: 1fr; }
+    }
+
+    .step {
+      position: relative;
+      padding: var(--space-8) var(--space-6);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      text-align: center;
+    }
+
+    .step__number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--color-gold-glow);
+      border: 2px solid var(--color-gold);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-gold);
+      margin-bottom: var(--space-5);
+    }
+
+    .step__title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+      letter-spacing: -0.01em;
+    }
+
+    .step__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.55;
+      margin-inline: auto;
+    }
+
+    .step__img {
+      margin-top: var(--space-5);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .step__img img {
+      width: 100%;
+      display: block;
+    }
+
+    .step__connector {
+      display: none;
+    }
+
+    @media (min-width: 769px) {
+      .step__connector {
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        transform: translateY(-50%);
+        color: var(--color-gold);
+        z-index: 2;
+        opacity: 0.4;
+      }
+    }
+
+    /* ============================================
+       SOCIAL PROOF
+       ============================================ */
+    .social-proof {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .social-proof__hero-stat {
+      text-align: center;
+      margin-bottom: var(--space-4);
+    }
+
+    .social-proof__big-number {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      color: var(--color-gold);
+      letter-spacing: -0.03em;
+    }
+
+    .social-proof__big-label {
+      font-size: var(--text-lg);
+      color: var(--color-text-muted);
+      margin-top: var(--space-2);
+    }
+
+    .social-proof__quote {
+      max-width: 800px;
+      margin: var(--space-12) auto;
+      text-align: center;
+      position: relative;
+      padding: var(--space-8);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .social-proof__quote-icon {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 32px;
+      background: var(--color-gold);
+      color: #0a0a0a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-proof__quote-text {
+      font-size: var(--text-lg);
+      line-height: 1.7;
+      color: var(--color-text);
+      font-style: italic;
+    }
+
+    .social-proof__quote-author {
+      margin-top: var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--color-gold);
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    .social-proof__stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-6);
+      margin-top: var(--space-12);
+    }
+
+    .social-proof__stat {
+      text-align: center;
+      padding: var(--space-6);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .social-proof__stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--color-gold);
+      letter-spacing: -0.02em;
+    }
+
+    .social-proof__stat-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-top: var(--space-2);
+    }
+
+    @media (max-width: 768px) {
+      .social-proof__stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* ============================================
+       PRICING
+       ============================================ */
+    .pricing {
+      background: var(--color-bg);
+    }
+
+    .pricing__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .pricing__grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
+    }
+
+    .pricing-card {
+      padding: var(--space-8);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      position: relative;
+      transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive);
+    }
+
+    .pricing-card--featured {
+      border-color: var(--color-gold);
+      box-shadow: 0 0 50px rgba(212, 168, 75, 0.1), 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(1.03);
+    }
+
+    .pricing-card__badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--space-1) var(--space-4);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #0a0a0a;
+      background: var(--color-gold);
+      border-radius: var(--radius-2xl);
+      white-space: nowrap;
+    }
+
+    .pricing-card__name {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .pricing-card__price {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+
+    .pricing-card__amount {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .pricing-card__period {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .pricing-card__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .pricing-card__features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+    }
+
+    .pricing-card__features li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .pricing-card__features li i {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--color-gold);
+      margin-top: 2px;
+    }
+
+    .pricing-card__cta {
+      display: block;
+      width: 100%;
+      padding: var(--space-3);
+      text-align: center;
+      font-weight: 600;
+      font-size: var(--text-sm);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-interactive);
+      text-decoration: none;
+    }
+
+    .pricing-card__cta--primary {
+      color: #0a0a0a;
+      background: var(--color-gold);
+    }
+    .pricing-card__cta--primary:hover {
+      background: var(--color-gold-light);
+      color: #0a0a0a;
+      transform: translateY(-1px);
+    }
+
+    .pricing-card__cta--secondary {
+      color: var(--color-text);
+      border: 1px solid var(--color-border-light);
+    }
+    .pricing-card__cta--secondary:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold);
+    }
+
+    /* ============================================
+       FAQ
+       ============================================ */
+    .faq {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .faq__list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .faq__item {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: border-color var(--transition-interactive);
+    }
+
+    .faq__item.active {
+      border-color: rgba(212, 168, 75, 0.3);
+    }
+
+    .faq__question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-5) var(--space-6);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text);
+      text-align: left;
+      cursor: pointer;
+      transition: color var(--transition-interactive);
+    }
+
+    .faq__question:hover {
+      color: var(--color-gold);
+    }
+
+    .faq__question i {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--color-text-faint);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .faq__item.active .faq__question i {
+      transform: rotate(45deg);
+      color: var(--color-gold);
+    }
+
+    .faq__answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+
+    .faq__item.active .faq__answer {
+      max-height: 300px;
+    }
+
+    .faq__answer-inner {
+      padding: 0 var(--space-6) var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       CONTACT FORM
+       ============================================ */
+    .contact {
+      background: var(--color-bg);
+    }
+
+    .contact__form-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: var(--space-8);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .contact__form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    .contact__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
+    @media (max-width: 640px) {
+      .contact__row { grid-template-columns: 1fr; }
+    }
+
+    .contact__field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .contact__label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .contact__input,
+    .contact__select,
+    .contact__textarea {
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      transition: border-color var(--transition-interactive);
+    }
+
+    .contact__input:focus,
+    .contact__select:focus,
+    .contact__textarea:focus {
+      outline: none;
+      border-color: var(--color-gold);
+    }
+
+    .contact__textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact__select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239a9790' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 40px;
+    }
+
+    .contact__submit {
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: #0a0a0a;
+      background: var(--color-gold);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-interactive);
+    }
+
+    .contact__submit:hover {
+      background: var(--color-gold-light);
+      transform: translateY(-1px);
+    }
+
+    .contact__submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .contact__success {
+      display: none;
+      text-align: center;
+      padding: var(--space-8);
+    }
+
+    .contact__success.show {
+      display: block;
+    }
+
+    .contact__success-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto var(--space-4);
+      background: var(--color-gold-glow);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-gold);
+    }
+
+    .contact__success h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .contact__success p {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      margin-inline: auto;
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding-block: var(--space-16) var(--space-8);
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--space-12);
+      margin-bottom: var(--space-12);
+    }
+
+    @media (max-width: 768px) {
+      .footer__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-8);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer__brand-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-top: var(--space-4);
+      max-width: 300px;
+    }
+
+    .footer__col-title {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+    }
+
+    .footer__links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .footer__links a {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      transition: color var(--transition-interactive);
+    }
+
+    .footer__links a:hover {
+      color: var(--color-gold);
+    }
+
+    .footer__bottom {
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+
+    .footer__copyright {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+
+    .footer__bottom-links {
+      display: flex;
+      gap: var(--space-6);
+    }
+
+    .footer__bottom-links a {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+    .footer__bottom-links a:hover { color: var(--color-gold); }
+
+    /* ============================================
+       UTILITIES / ANIMATIONS
+       ============================================ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ========== HEADER ========== -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#" class="header__logo">
+        <svg class="header__logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Precious Metals POS logo">
+          <rect x="2" y="2" width="28" height="28" rx="6" stroke="#D4A84B" stroke-width="2"/>
+          <path d="M10 22V10h5.5a4.5 4.5 0 0 1 0 9H10" stroke="#D4A84B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="22" cy="20" r="3" stroke="#D4A84B" stroke-width="1.5"/>
+          <line x1="22" y1="10" x2="22" y2="17" stroke="#D4A84B" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Precious Metals POS
+      </a>
+
+      <nav class="header__nav">
+        <ul class="header__nav-links" id="navLinks">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#comparison">Compare</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li class="mobile-cta" style="display:none;"><a href="#contact">Request Demo</a></li>
+        </ul>
+        <a href="#contact" class="header__cta">Request Demo <i data-lucide="arrow-right"></i></a>
+        <button class="header__menu-btn" id="menuBtn" aria-label="Toggle menu">
+          <i data-lucide="menu"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero section" id="hero">
+    <div class="hero__bg"></div>
+    <div class="container">
+      <div class="hero__layout">
+        <div class="hero__content">
+          <div class="hero__badge">
+            <i data-lucide="shield-check"></i>
+            Built for Precious Metals Dealers
+          </div>
+
+          <h1 class="hero__title">
+            The POS Built for<br>
+            <span class="hero__title-gold">Gold Buyers</span>
+          </h1>
+
+          <p class="hero__subtitle">
+            Live spot prices. Instant melt value calculations. Hold period compliance. 
+            Everything a precious metals dealer needs — nothing you don't.
+          </p>
+
+          <div class="hero__actions">
+            <a href="#contact" class="btn btn--primary">
+              <i data-lucide="play"></i>
+              Request a Demo
+            </a>
+            <a href="#features" class="btn btn--secondary">
+              <i data-lucide="layout-grid"></i>
+              See Features
+            </a>
+          </div>
+
+          <div class="hero__stats">
+            <div>
+              <div class="hero__stat-value">4</div>
+              <div class="hero__stat-label">Locations Active</div>
+            </div>
+            <div>
+              <div class="hero__stat-value">$10M+</div>
+              <div class="hero__stat-label">Processed</div>
+            </div>
+            <div>
+              <div class="hero__stat-value">24/7</div>
+              <div class="hero__stat-label">Spot Price Updates</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero product screenshot mockup -->
+        <div class="hero__mockup fade-in">
+          <div class="hero__mockup-frame">
+            <div class="hero__mockup-bar">
+              <span class="hero__mockup-dot"></span>
+              <span class="hero__mockup-dot"></span>
+              <span class="hero__mockup-dot"></span>
+              <span class="hero__mockup-bar-url">pos.georgiagoldbuyers.com</span>
+            </div>
+            <img src="screenshots/dashboard.png" alt="Precious Metals POS Dashboard showing live spot prices, KPIs, and quick calculator" loading="eager">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SPOT PRICE TICKER ========== -->
+  <div class="ticker">
+    <div class="container">
+      <div class="ticker__inner" id="tickerInner">
+        <div class="ticker__item">
+          <span class="ticker__symbol">Au</span>
+          <span class="ticker__name">Gold</span>
+          <span class="ticker__price">$4,767.90</span>
+          <span class="ticker__change ticker__change--up">+$99.20</span>
+        </div>
+        <span class="ticker__sep">|</span>
+        <div class="ticker__item">
+          <span class="ticker__symbol">Ag</span>
+          <span class="ticker__name">Silver</span>
+          <span class="ticker__price">$75.18</span>
+          <span class="ticker__change ticker__change--up">+$0.18</span>
+        </div>
+        <span class="ticker__sep">|</span>
+        <div class="ticker__item">
+          <span class="ticker__symbol">Pt</span>
+          <span class="ticker__name">Platinum</span>
+          <span class="ticker__price">$1,962.00</span>
+          <span class="ticker__change ticker__change--up">+$10.00</span>
+        </div>
+        <span class="ticker__sep">|</span>
+        <div class="ticker__item">
+          <span class="ticker__symbol">Pd</span>
+          <span class="ticker__name">Palladium</span>
+          <span class="ticker__price">$1,465.00</span>
+          <span class="ticker__change ticker__change--down">-$1.00</span>
+        </div>
+        <!-- Duplicate for mobile scrolling -->
+        <span class="ticker__sep ticker__dup">|</span>
+        <div class="ticker__item ticker__dup">
+          <span class="ticker__symbol">Au</span>
+          <span class="ticker__name">Gold</span>
+          <span class="ticker__price">$4,767.90</span>
+          <span class="ticker__change ticker__change--up">+$99.20</span>
+        </div>
+        <span class="ticker__sep ticker__dup">|</span>
+        <div class="ticker__item ticker__dup">
+          <span class="ticker__symbol">Ag</span>
+          <span class="ticker__name">Silver</span>
+          <span class="ticker__price">$75.18</span>
+          <span class="ticker__change ticker__change--up">+$0.18</span>
+        </div>
+        <span class="ticker__sep ticker__dup">|</span>
+        <div class="ticker__item ticker__dup">
+          <span class="ticker__symbol">Pt</span>
+          <span class="ticker__name">Platinum</span>
+          <span class="ticker__price">$1,962.00</span>
+          <span class="ticker__change ticker__change--up">+$10.00</span>
+        </div>
+        <span class="ticker__sep ticker__dup">|</span>
+        <div class="ticker__item ticker__dup">
+          <span class="ticker__symbol">Pd</span>
+          <span class="ticker__name">Palladium</span>
+          <span class="ticker__price">$1,465.00</span>
+          <span class="ticker__change ticker__change--down">-$1.00</span>
+        </div>
+      </div>
+      <span class="ticker__note">Prices update in real-time within the app via Kitco</span>
+    </div>
+  </div>
+
+  <!-- ========== FEATURES ========== -->
+  <section class="features section" id="features">
+    <div class="container">
+      <div class="section__header fade-in">
+        <div class="section__label"><i data-lucide="sparkles"></i> Core Features</div>
+        <h2 class="section__title">Everything You Need to Buy &amp; Sell Precious Metals</h2>
+        <p class="section__desc">Purpose-built tools for gold buyers, coin dealers, and precious metals shops. No workarounds, no compromises.</p>
+      </div>
+
+      <!-- Row 1: 4 feature cards -->
+      <div class="features__grid fade-in">
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="trending-up"></i></div>
+          <h3 class="feature-card__title">Live Spot Prices</h3>
+          <p class="feature-card__desc">Gold, silver, platinum, and palladium prices pulled from Kitco every 30 seconds. Always know the market.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="calculator"></i></div>
+          <h3 class="feature-card__title">Smart Calculator</h3>
+          <p class="feature-card__desc">Select karat, enter weight, set your percentage. Melt value and offer price calculated instantly from live spot.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="users"></i></div>
+          <h3 class="feature-card__title">Customer Management</h3>
+          <p class="feature-card__desc">Full customer profiles with ID capture, transaction history, and lifetime value tracking. Know your buyers and sellers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="package"></i></div>
+          <h3 class="feature-card__title">Inventory Tracking</h3>
+          <p class="feature-card__desc">Track every item by metal, karat, weight, and location. See hold status, cost basis, and profit/loss at a glance.</p>
+        </div>
+      </div>
+
+      <!-- Screenshot: Dashboard -->
+      <div class="features__screenshot fade-in">
+        <img src="screenshots/dashboard.png" alt="Dashboard with spot prices, KPIs, quick calculator, and recent transactions" loading="lazy">
+      </div>
+
+      <!-- Row 2: 4 feature cards -->
+      <div class="features__grid fade-in">
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="shield"></i></div>
+          <h3 class="feature-card__title">Compliance &amp; Holds</h3>
+          <p class="feature-card__desc">Automatic hold periods for every buy. Track active holds, overdue items, and flagged transactions in one dashboard.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="truck"></i></div>
+          <h3 class="feature-card__title">Refinery Tracking</h3>
+          <p class="feature-card__desc">Create shipments, assign inventory, and track status from sent to settled. Know exactly what's at the refinery.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="building-2"></i></div>
+          <h3 class="feature-card__title">Multi-Location</h3>
+          <p class="feature-card__desc">Manage multiple shops from one account. Each location has its own inventory, employees, and reports.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon"><i data-lucide="download"></i></div>
+          <h3 class="feature-card__title">Data Export</h3>
+          <p class="feature-card__desc">Export transactions, customers, and inventory to CSV. Import data via our bulk tools. Your data, your way.</p>
+        </div>
+      </div>
+
+      <!-- Screenshot pair: Compliance + Inventory -->
+      <div class="features__screenshot-pair fade-in">
+        <div class="features__screenshot">
+          <img src="screenshots/compliance.png" alt="Compliance holds dashboard showing active holds and flagged items" loading="lazy">
+        </div>
+        <div class="features__screenshot">
+          <img src="screenshots/inventory.png" alt="Inventory tracking with status, location, and profit/loss" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== COMPARISON TABLE ========== -->
+  <section class="comparison section" id="comparison">
+    <div class="container">
+      <div class="section__header fade-in">
+        <div class="section__label"><i data-lucide="scale"></i> Side-by-Side</div>
+        <h2 class="section__title">Why Not Just Use Square or Clover?</h2>
+        <p class="section__desc">Generic POS systems weren't built for precious metals. Here's what they're missing.</p>
+      </div>
+
+      <div class="comparison__table-wrap fade-in">
+        <table class="comparison__table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="comparison__ours">Precious Metals POS</th>
+              <th>Square</th>
+              <th>Clover</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Live spot prices (Au/Ag/Pt/Pd)</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Melt value calculator by karat</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Purity/karat tracking</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Hold period compliance</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Customer ID photo capture</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Refinery shipment tracking</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Multi-location inventory</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Customer signature capture</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Receipt printing</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Inventory labels with QR</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+            <tr>
+              <td>Built for precious metals</td>
+              <td><span class="comparison__check">✓</span></td>
+              <td><span class="comparison__x">✗</span></td>
+              <td><span class="comparison__x">✗</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="how-it-works section" id="how-it-works">
+    <div class="container">
+      <div class="section__header fade-in">
+        <div class="section__label"><i data-lucide="zap"></i> How It Works</div>
+        <h2 class="section__title">Three Steps. That's It.</h2>
+        <p class="section__desc">From customer walk-in to completed transaction in under a minute.</p>
+      </div>
+
+      <div class="steps fade-in">
+        <div class="step">
+          <div class="step__number">01</div>
+          <h3 class="step__title">Add the Customer</h3>
+          <p class="step__desc">Look up an existing customer or create a new one. Capture their ID photo and info for compliance.</p>
+          <div class="step__img">
+            <img src="screenshots/customers.png" alt="Customer management screen" loading="lazy">
+          </div>
+          <div class="step__connector"><i data-lucide="chevron-right"></i></div>
+        </div>
+
+        <div class="step">
+          <div class="step__number">02</div>
+          <h3 class="step__title">Calculate the Offer</h3>
+          <p class="step__desc">Select the metal and karat. Enter the weight. The calculator pulls live spot and shows your offer price instantly.</p>
+          <div class="step__img">
+            <img src="screenshots/dashboard.png" alt="Calculator with live spot prices" loading="lazy">
+          </div>
+          <div class="step__connector"><i data-lucide="chevron-right"></i></div>
+        </div>
+
+        <div class="step">
+          <div class="step__number">03</div>
+          <h3 class="step__title">Complete the Ticket</h3>
+          <p class="step__desc">Add line items, capture signatures, print a receipt. The item enters inventory and a hold period begins automatically.</p>
+          <div class="step__img">
+            <img src="screenshots/ticket.png" alt="Ticket detail with line items and summary" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SOCIAL PROOF ========== -->
+  <section class="social-proof section" id="social-proof">
+    <div class="container">
+      <div class="social-proof__hero-stat fade-in">
+        <div class="social-proof__big-number">$10M+</div>
+        <p class="social-proof__big-label">in Transactions Processed</p>
+        <p class="section__desc" style="margin-top: var(--space-2); margin-inline: auto;">Trusted by precious metals dealers across 4 locations</p>
+      </div>
+
+      <blockquote class="social-proof__quote fade-in">
+        <div class="social-proof__quote-icon">
+          <i data-lucide="quote" style="width:16px;height:16px;"></i>
+        </div>
+        <p class="social-proof__quote-text">
+          "We built this system because nothing else existed for gold buyers. Generic POS systems don't understand spot prices, karat calculations, or hold periods. Now we're sharing it with the industry."
+        </p>
+        <footer class="social-proof__quote-author">
+          — Georgia Gold Buyers, Founder
+        </footer>
+      </blockquote>
+
+      <div class="social-proof__stats fade-in">
+        <div class="social-proof__stat">
+          <div class="social-proof__stat-value">4</div>
+          <div class="social-proof__stat-label">Active Locations</div>
+        </div>
+        <div class="social-proof__stat">
+          <div class="social-proof__stat-value">2</div>
+          <div class="social-proof__stat-label">Businesses</div>
+        </div>
+        <div class="social-proof__stat">
+          <div class="social-proof__stat-value">$10M+</div>
+          <div class="social-proof__stat-label">Processed</div>
+        </div>
+        <div class="social-proof__stat">
+          <div class="social-proof__stat-value">1,000+</div>
+          <div class="social-proof__stat-label">Customers Served</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRICING ========== -->
+  <section class="pricing section" id="pricing">
+    <div class="container">
+      <div class="section__header fade-in">
+        <div class="section__label"><i data-lucide="tag"></i> Pricing</div>
+        <h2 class="section__title">Simple, Transparent Pricing</h2>
+        <p class="section__desc">Start small. Scale up. No per-transaction fees, ever.</p>
+      </div>
+
+      <div class="pricing__grid fade-in">
+        <!-- Starter -->
+        <div class="pricing-card">
+          <div class="pricing-card__name">Starter</div>
+          <div class="pricing-card__price">
+            <span class="pricing-card__amount">$99</span>
+            <span class="pricing-card__period">/month</span>
+          </div>
+          <p class="pricing-card__desc">Perfect for a single-location shop getting started with digital tools.</p>
+          <ul class="pricing-card__features">
+            <li><i data-lucide="check"></i> 1 location</li>
+            <li><i data-lucide="check"></i> 2 employee accounts</li>
+            <li><i data-lucide="check"></i> Live spot prices</li>
+            <li><i data-lucide="check"></i> Calculator &amp; tickets</li>
+            <li><i data-lucide="check"></i> Customer management</li>
+            <li><i data-lucide="check"></i> Basic compliance holds</li>
+            <li><i data-lucide="check"></i> Receipt printing</li>
+          </ul>
+          <a href="#contact" class="pricing-card__cta pricing-card__cta--secondary">Get Started</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="pricing-card pricing-card--featured">
+          <div class="pricing-card__badge">Most Popular</div>
+          <div class="pricing-card__name">Pro</div>
+          <div class="pricing-card__price">
+            <span class="pricing-card__amount">$199</span>
+            <span class="pricing-card__period">/month</span>
+          </div>
+          <p class="pricing-card__desc">For growing operations that need multi-location support and full compliance tools.</p>
+          <ul class="pricing-card__features">
+            <li><i data-lucide="check"></i> Up to 4 locations</li>
+            <li><i data-lucide="check"></i> 10 employee accounts</li>
+            <li><i data-lucide="check"></i> Everything in Starter</li>
+            <li><i data-lucide="check"></i> Multi-location inventory</li>
+            <li><i data-lucide="check"></i> Refinery shipment tracking</li>
+            <li><i data-lucide="check"></i> Advanced compliance dashboard</li>
+            <li><i data-lucide="check"></i> Reports &amp; analytics</li>
+            <li><i data-lucide="check"></i> Data export / import</li>
+            <li><i data-lucide="check"></i> Priority support</li>
+          </ul>
+          <a href="#contact" class="pricing-card__cta pricing-card__cta--primary">Get Started</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card">
+          <div class="pricing-card__name">Enterprise</div>
+          <div class="pricing-card__price">
+            <span class="pricing-card__amount">Custom</span>
+          </div>
+          <p class="pricing-card__desc">For large operations needing custom integrations, dedicated support, and unlimited scale.</p>
+          <ul class="pricing-card__features">
+            <li><i data-lucide="check"></i> Unlimited locations</li>
+            <li><i data-lucide="check"></i> Unlimited employees</li>
+            <li><i data-lucide="check"></i> Everything in Pro</li>
+            <li><i data-lucide="check"></i> Custom integrations</li>
+            <li><i data-lucide="check"></i> Dedicated account manager</li>
+            <li><i data-lucide="check"></i> SLA guarantee</li>
+            <li><i data-lucide="check"></i> Bulk data migration</li>
+            <li><i data-lucide="check"></i> White-label options</li>
+          </ul>
+          <a href="#contact" class="pricing-card__cta pricing-card__cta--secondary">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section class="faq section" id="faq">
+    <div class="container">
+      <div class="section__header fade-in">
+        <div class="section__label"><i data-lucide="help-circle"></i> FAQ</div>
+        <h2 class="section__title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq__list fade-in">
+        <div class="faq__item">
+          <button class="faq__question">
+            Does it work on iPad and mobile?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Yes. The app is a Progressive Web App (PWA) that works on any device — iPad, Android tablet, desktop browser, or phone. Install it to your home screen for an app-like experience.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            How do spot prices update?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              We pull live spot prices from Kitco every 30 seconds. Gold, silver, platinum, and palladium are all tracked in real-time.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            Does it handle Georgia hold period requirements?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Yes. Every buy transaction automatically creates a 10 business-day hold period (configurable). The compliance dashboard shows active holds, overdue items, and flagged transactions.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            Can I import my existing customer data?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Yes. You can import customers via CSV through our data tools. Contact support for bulk migration assistance.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            Does it support receipt/thermal printers?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Yes. Every transaction has a Print Receipt button that generates a clean, branded receipt optimized for standard and thermal printers.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            Is my data secure?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Your data is hosted on Supabase (enterprise-grade Postgres) with encryption at rest and in transit. Each shop's data is completely isolated.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            Can my employees only see their location's data?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Yes. You can assign employees to specific locations. They'll only see inventory, transactions, and reports for their assigned location.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__question">
+            What happens if I need help?
+            <i data-lucide="plus"></i>
+          </button>
+          <div class="faq__answer">
+            <div class="faq__answer-inner">
+              Every account has access to our built-in support system. Submit bug reports, feature requests, or support tickets directly from the app. Our team actively monitors and responds.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT / DEMO REQUEST ========== -->
+  <section class="contact section" id="contact">
+    <div class="container">
+      <div class="section__header fade-in">
+        <div class="section__label"><i data-lucide="mail"></i> Get In Touch</div>
+        <h2 class="section__title">Ready to See It in Action?</h2>
+        <p class="section__desc">Request a demo or ask us anything. We'll get back to you within 24 hours.</p>
+      </div>
+
+      <div class="contact__form-wrap fade-in">
+        <form class="contact__form" id="contactForm">
+          <div class="contact__row">
+            <div class="contact__field">
+              <label class="contact__label" for="contactName">Name</label>
+              <input class="contact__input" type="text" id="contactName" name="name" required placeholder="Your name">
+            </div>
+            <div class="contact__field">
+              <label class="contact__label" for="contactEmail">Email</label>
+              <input class="contact__input" type="email" id="contactEmail" name="email" required placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="contact__row">
+            <div class="contact__field">
+              <label class="contact__label" for="contactShop">Shop Name</label>
+              <input class="contact__input" type="text" id="contactShop" name="shop" placeholder="Your shop name">
+            </div>
+            <div class="contact__field">
+              <label class="contact__label" for="contactType">Inquiry Type</label>
+              <select class="contact__select" id="contactType" name="type">
+                <option value="demo_request">Request a Demo</option>
+                <option value="general">General Inquiry</option>
+                <option value="enterprise">Enterprise Plan</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="contact__field">
+            <label class="contact__label" for="contactMessage">Message</label>
+            <textarea class="contact__textarea" id="contactMessage" name="message" placeholder="Tell us about your shop and what you're looking for..."></textarea>
+          </div>
+
+          <button type="submit" class="contact__submit" id="contactSubmit">
+            Send Message
+          </button>
+        </form>
+
+        <div class="contact__success" id="contactSuccess">
+          <div class="contact__success-icon">
+            <i data-lucide="check" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>Message Sent!</h3>
+          <p>Thanks for reaching out. We'll get back to you within 24 hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a href="#" class="header__logo" style="margin-bottom: var(--space-2);">
+            <svg class="header__logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Precious Metals POS">
+              <rect x="2" y="2" width="28" height="28" rx="6" stroke="#D4A84B" stroke-width="2"/>
+              <path d="M10 22V10h5.5a4.5 4.5 0 0 1 0 9H10" stroke="#D4A84B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="22" cy="20" r="3" stroke="#D4A84B" stroke-width="1.5"/>
+              <line x1="22" y1="10" x2="22" y2="17" stroke="#D4A84B" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Precious Metals POS
+          </a>
+          <p class="footer__brand-desc">The complete point-of-sale system for gold buyers, coin dealers, and precious metals shops.</p>
+        </div>
+
+        <div>
+          <h4 class="footer__col-title">Product</h4>
+          <ul class="footer__links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#comparison">Compare</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__col-title">Support</h4>
+          <ul class="footer__links">
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#contact">Submit a Bug</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__col-title">Legal</h4>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span class="footer__copyright">&copy; 2026 Georgia Gold Buyers. All rights reserved.</span>
+        <div class="footer__bottom-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // ---- Header scroll effect ----
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('header--scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // ---- Mobile menu toggle ----
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Close mobile menu on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // ---- FAQ Accordion ----
+    document.querySelectorAll('.faq__question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+
+        // Close all
+        document.querySelectorAll('.faq__item').forEach(i => i.classList.remove('active'));
+
+        // Toggle current
+        if (!wasActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // ---- Scroll Reveal (fade-in) ----
+    const faders = document.querySelectorAll('.fade-in');
+    const observerOpts = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOpts);
+    faders.forEach(el => observer.observe(el));
+
+    // ---- Contact Form Submission ----
+    const contactForm = document.getElementById('contactForm');
+    const contactSubmit = document.getElementById('contactSubmit');
+    const contactSuccess = document.getElementById('contactSuccess');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const shop = document.getElementById('contactShop').value.trim();
+      const type = document.getElementById('contactType').value;
+      const message = document.getElementById('contactMessage').value.trim();
+
+      if (!name || !email) return;
+
+      contactSubmit.disabled = true;
+      contactSubmit.textContent = 'Sending...';
+
+      try {
+        const typeLabel = type === 'demo_request' ? 'Demo Request' : type === 'enterprise' ? 'Enterprise Inquiry' : 'General Inquiry';
+
+        await fetch('https://shnuhdqrbvcglkarcoyt.supabase.co/rest/v1/support_tickets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnVoZHFyYnZjZ2xrYXJjb3l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzIxNzcsImV4cCI6MjA5MDY0ODE3N30.6W56eBPC-59HBIPSEZ8nN378pjYHP37wc0QGKab8gvQ',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnVoZHFyYnZjZ2xrYXJjb3l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzIxNzcsImV4cCI6MjA5MDY0ODE3N30.6W56eBPC-59HBIPSEZ8nN378pjYHP37wc0QGKab8gvQ'
+          },
+          body: JSON.stringify({
+            type: type === 'demo_request' ? 'demo_request' : 'support',
+            subject: typeLabel + ' from ' + name,
+            description: 'Shop: ' + (shop || 'N/A') + '\nEmail: ' + email + '\n\n' + (message || 'No message provided.'),
+            email: email,
+            tenant_name: shop || name,
+            status: 'open',
+            priority: 'normal'
+          })
+        });
+
+        contactForm.style.display = 'none';
+        contactSuccess.classList.add('show');
+        lucide.createIcons();
+      } catch (err) {
+        contactSubmit.disabled = false;
+        contactSubmit.textContent = 'Send Message';
+        alert('Something went wrong. Please try again or email us directly.');
+      }
+    });
+  </script>
+</body>
+</html>
